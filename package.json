@@ -1,0 +1,13 @@
+{
+  "name": "jinglang-corp-website",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "鲸浪创新工坊 · AI Native 企业智能体公司官网",
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "check": "node scripts/check.mjs",
+    "build": "node scripts/build.mjs"
+  },
+  "engines": { "node": ">=22" }
+}
