@@ -1,6 +1,6 @@
 import { siteConfig } from './site-config.js';
 
-document.documentElement.classList.add('js');
+import './navigation.js';
 
 const icon = (name) => {
   const paths = {
@@ -95,39 +95,6 @@ tabs.forEach((tab, index) => {
 nextButton.addEventListener('click', () => renderStep((currentStep + 1) % steps.length));
 renderStep(0, false);
 
-const menuToggle = document.querySelector('.menu-toggle');
-const nav = document.querySelector('#main-nav');
-function closeMenu(restoreFocus = false) {
-  menuToggle.setAttribute('aria-expanded', 'false');
-  menuToggle.setAttribute('aria-label', '打开导航菜单');
-  nav.classList.remove('is-open');
-  if (restoreFocus) menuToggle.focus();
-}
-menuToggle.addEventListener('click', () => {
-  const open = menuToggle.getAttribute('aria-expanded') !== 'true';
-  menuToggle.setAttribute('aria-expanded', String(open));
-  menuToggle.setAttribute('aria-label', open ? '关闭导航菜单' : '打开导航菜单');
-  nav.classList.toggle('is-open', open);
-});
-nav.addEventListener('click', (event) => { if (event.target.closest('a')) closeMenu(); });
-document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && nav.classList.contains('is-open')) closeMenu(true); });
-document.addEventListener('click', (event) => { if (!event.target.closest('.site-header')) closeMenu(); });
-matchMedia('(min-width: 721px)').addEventListener('change', (event) => { if (event.matches) closeMenu(); });
-
-if ('IntersectionObserver' in window) {
-  const sections = [...document.querySelectorAll('main section[id]')];
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      nav.querySelectorAll('a').forEach((link) => {
-        if (link.hash === `#${entry.target.id}`) link.setAttribute('aria-current', 'location');
-        else link.removeAttribute('aria-current');
-      });
-    });
-  }, { rootMargin: '-15% 0px -60% 0px' });
-  sections.forEach((section) => observer.observe(section));
-}
-
 const form = document.querySelector('#brief-form');
 const scenarioInput = document.querySelector('#brief-scenario');
 const result = document.querySelector('#brief-result');
@@ -164,6 +131,14 @@ if (wecomUrl) {
   const wecomLink = document.querySelector('#wecom-link');
   wecomLink.href = wecomUrl;
   wecomLink.hidden = false;
+}
+if (siteConfig.contactWechat) {
+  const wechat = document.createElement('p');
+  wechat.className = 'public-wechat';
+  wechat.textContent = `商务微信：${siteConfig.contactWechat}`;
+  document.querySelector('#configured-contact').append(wechat);
+  document.querySelector('#contact-channel').hidden = true;
+  document.querySelector('#configured-contact').hidden = false;
 }
 
 form.addEventListener('submit', (event) => {

@@ -9,7 +9,7 @@ const portIndex = args.indexOf('--port');
 const hostIndex = args.indexOf('--host');
 const port = Number(portIndex >= 0 ? args[portIndex + 1] : process.env.PORT || 5173);
 const host = hostIndex >= 0 ? args[hostIndex + 1] : process.env.HOST || '0.0.0.0';
-const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.woff2': 'font/woff2', '.ttf': 'font/ttf', '.txt': 'text/plain; charset=utf-8' };
+const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg', '.webp': 'image/webp', '.woff2': 'font/woff2', '.ttf': 'font/ttf', '.txt': 'text/plain; charset=utf-8' };
 
 createServer(async (request, response) => {
   if (!['GET', 'HEAD'].includes(request.method)) {

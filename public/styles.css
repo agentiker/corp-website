@@ -2331,3 +2331,143 @@ it must not cover the review gate. */
     display:none;
   }
 }
+
+/* Case evidence joins the existing product and service narrative. */
+.case-section { background:var(--white); }
+.case-heading { display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:end;margin-bottom:48px; }
+.case-heading>p { color:var(--muted);font-size:15px;line-height:1.95;max-width:440px; }
+.case-feature { display:grid;grid-template-columns:1.1fr 1fr;gap:66px;align-items:center; }
+.case-cover { display:flex;align-items:center;justify-content:center;padding:28px;background:var(--blue-soft);border-radius:var(--radius); }
+.case-cover img { display:block;width:100%;height:auto;border-radius:7px; }
+.case-cover:hover { background:#e4ebff; }
+.case-intro :is(h2, h3) { font-size:30px;line-height:1.45;margin-top:18px; }
+.case-intro>p { color:var(--muted);font-size:14px;line-height:1.95;margin-top:18px; }
+.case-intro .case-client { font-size:12px;margin-top:12px; }
+.case-facts { padding-left:18px;margin:18px 0 24px;font-size:13px;line-height:2;color:var(--muted); }
+.case-intro .case-stage { font-size:11px;margin-top:21px; }
+.public-wechat { color:var(--muted);font-size:14px; }
+@media(max-width:1000px){.case-feature{gap:38px}.case-heading{gap:45px}.case-intro :is(h2, h3){font-size:26px}.main-nav{gap:15px}}
+@media(max-width:720px){.case-heading{grid-template-columns:1fr;gap:21px;margin-bottom:30px}.case-feature{grid-template-columns:1fr;gap:28px}.case-cover{padding:20px}.case-intro :is(h2, h3){font-size:27px}.case-intro>p{font-size:14px}.case-facts{font-size:13px}}
+
+.case-menu {
+  position: relative;
+}
+.case-menu summary {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 40px;
+  list-style: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.case-menu summary::-webkit-details-marker {
+  display: none;
+}
+.case-menu summary:focus-visible {
+  outline: 3px solid #e59836;
+  outline-offset: 4px;
+}
+.case-menu summary .icon {
+  width: 15px;
+  height: 15px;
+}
+.case-menu[open] summary {
+  color: var(--blue);
+}
+.case-menu[open] summary .icon {
+  transform: rotate(180deg);
+}
+.case-menu-links {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1;
+  min-width: 245px;
+  padding: 6px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--white);
+  box-shadow: 0 10px 26px #152e4414;
+}
+.case-menu-links a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 7px;
+  font-size: 13px;
+  white-space: nowrap;
+}
+.case-menu-links a:hover,
+.case-menu-links a[aria-current="page"] {
+  color: var(--blue);
+  background: var(--blue-soft);
+}
+.case-directory-link {
+  margin-top: 40px;
+  display: flex;
+  justify-content: flex-end;
+}
+.case-index-intro {
+  padding-block: clamp(48px, 7vw, 88px);
+}
+.case-breadcrumb {
+  margin-bottom: 25px;
+}
+.case-index-intro h1 {
+  font-size: clamp(42px, 5.5vw, 72px);
+}
+.case-index-intro p {
+  max-width: 36em;
+  margin-top: 22px;
+  color: var(--muted);
+}
+.case-directory {
+  display: grid;
+  gap: 55px;
+}
+.case-directory .case-feature + .case-feature {
+  padding-top: 55px;
+  border-top: 1px solid var(--line);
+}
+@media (max-width: 720px) {
+  .case-menu summary {
+    min-height: 47px;
+    justify-content: space-between;
+  }
+  .case-menu-links {
+    position: static;
+    min-width: 0;
+    margin-bottom: 6px;
+    box-shadow: none;
+  }
+  .case-menu-links a {
+    white-space: normal;
+  }
+  .case-directory-link {
+    margin-top: 26px;
+    justify-content: flex-start;
+  }
+}
+@media (min-width: 721px) and (max-width: 820px) {
+  .header-inner {
+    gap: 14px;
+  }
+  .main-nav {
+    gap: 10px;
+    font-size: 11px;
+  }
+  .nav-cta {
+    gap: 5px;
+    padding-inline: 8px;
+  }
+}
+.case-status {
+  display: inline-block;
+  margin-top: 13px;
+}
+@media (max-width: 720px) {
+  .main-nav.is-open {
+    max-height: calc(100dvh - 72px);
+    overflow-y: auto;
+  }
+}

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { readFile, readdir, access } from 'node:fs/promises';
-import { join, resolve } from 'node:path';
+import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 
@@ -30,4 +30,40 @@ async function checkScripts(directory) {
 }
 await checkScripts(publicRoot);
 await checkScripts(join(root, 'scripts'));
-console.log('Passed: anchors, unique IDs, ARIA references, local assets, script targets, demo disclosure, and JavaScript syntax.');
+
+// Validate nested case routes as well as their links back to the homepage.
+async function checkPages(directory) {
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const path = join(directory, entry.name);
+    if (entry.isDirectory()) { await checkPages(path); continue; }
+    if (!entry.name.endsWith('.html')) continue;
+    const content = await readFile(path, 'utf8');
+    const pageIds = [...content.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]);
+    assert.equal(pageIds.length, new Set(pageIds).size, `Duplicate IDs in ${path}`);
+    assert.equal([...content.matchAll(/<h1\b/g)].length, 1, `Expected one h1 in ${path}`);
+    for (const [, ref] of content.matchAll(/\baria-(?:controls|labelledby)="([^"]+)"/g)) {
+      for (const id of ref.split(/\s+/)) assert(pageIds.includes(id), `Broken ARIA reference: ${path} #${id}`);
+    }
+    for (const [, link] of content.matchAll(/\b(?:src|href)="([^"]+)"/g)) {
+      if (/^(?:[a-z]+:|\/\/)/i.test(link)) continue;
+      const [local, hash] = link.split('#');
+      const target = local ? resolve(dirname(path), local) : path;
+      await access(target);
+      if (hash && target.endsWith('.html')) {
+        const targetContent = target === path ? content : await readFile(target, 'utf8');
+        assert(targetContent.includes(`id="${hash}"`), `Broken cross-page link: ${path} → ${link}`);
+      }
+    }
+  }
+}
+await checkPages(publicRoot);
+const caseRoot = join(publicRoot, 'cases/china-logistics-ai-ocr');
+const caseHtml = await readFile(join(caseRoot, 'index.html'), 'utf8');
+const caseScript = await readFile(join(caseRoot, 'case.js'), 'utf8');
+for (const [, id] of caseScript.matchAll(/byId\('([^']+)'\)/g)) assert(caseHtml.includes(`id="${id}"`), `Missing case DOM target: ${id}`);
+for (const [, asset] of caseScript.matchAll(/src:'([^']+)'/g)) await access(resolve(caseRoot, asset));
+const caseImages = (await readdir(join(caseRoot, 'images'))).filter((name) => name.endsWith('.png'));
+assert.equal(caseImages.length, 7, 'The case should ship seven original UI screenshots.');
+assert(!caseImages.some((name) => name.startsWith('p05')), 'Private personal documents must not ship.');
+assert(caseHtml.includes('方案建设目标') && caseHtml.includes('目前暂无实际效果数据'), 'Case goals must remain distinct from measured results.');
+console.log('Passed: homepage and case links, unique IDs, ARIA, local assets, screenshot scope, stage labels, script targets and JavaScript syntax.');
